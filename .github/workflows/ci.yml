@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: Typecheck, lint, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # 22 rather than 20: some of the toolchain declares `engines`
+          # requiring >= 20.19, and 22 is the current LTS anyway.
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+  programs:
+    name: Anchor programs
+    runs-on: ubuntu-latest
+    # The Solana/Anchor toolchain takes several minutes to install, so it only
+    # runs when the Rust actually changed.
+    if: contains(github.event.head_commit.message, 'programs/') || github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for program changes
+        id: changed
+        run: |
+          if git diff --name-only "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" HEAD \
+             | grep -qE '^(programs/|Cargo\.toml|Anchor\.toml)'; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: dtolnay/rust-toolchain@stable
+        if: steps.changed.outputs.run == 'true'
+
+      - name: Cargo check
+        if: steps.changed.outputs.run == 'true'
+        run: cargo check --workspace
+
+      - name: Cargo test
+        if: steps.changed.outputs.run == 'true'
+        run: cargo test --workspace
