@@ -224,7 +224,16 @@ export class WorldGen {
             }
 
             if (y === surface) {
-              data[base + y] = surface > SURFACE_Y + 4 ? BLOCK.GRAVEL : BLOCK.GRASS;
+              // Break up the surface with scree and bare earth. An unbroken
+              // sheet of one colour reads as a placeholder no matter how good
+              // the ambient occlusion underneath it is.
+              const patch = this.#scatter(x * 0.055, 0, z * 0.055);
+              data[base + y] =
+                surface > SURFACE_Y + 4 || patch > 0.42
+                  ? BLOCK.GRAVEL
+                  : patch < -0.5
+                    ? BLOCK.DIRT
+                    : BLOCK.GRASS;
               continue;
             }
 

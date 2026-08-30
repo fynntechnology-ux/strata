@@ -66,7 +66,7 @@ export class Renderer {
     this.renderer.setPixelRatio(this.#targetPixelRatio);
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.15;
+    this.renderer.toneMappingExposure = 1.28;
 
     this.camera = new THREE.PerspectiveCamera(52, 1, 0.1, 900);
 
@@ -77,7 +77,7 @@ export class Renderer {
     this.scene.fog = new THREE.Fog(SKY_HORIZON.clone(), 90, 340);
     this.scene.add(this.#buildSky());
 
-    const hemisphere = new THREE.HemisphereLight(0xa8c4e0, 0x2b2118, 1.05);
+    const hemisphere = new THREE.HemisphereLight(0xa8c4e0, 0x2b2118, 1.18);
     this.scene.add(hemisphere);
 
     const sun = new THREE.DirectionalLight(SUN_TINT, 0.85);

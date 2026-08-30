@@ -61,10 +61,16 @@ export const STRATA: readonly StratumBand[] = [
     bottomY: 34,
     baseBlock: "stone",
     hardness: 1,
+    // Thresholds are calibrated, not guessed. Normalised 3D simplex output is
+    // roughly normal around 0.5 with a standard deviation near 0.2, so a
+    // threshold of 0.70 admits ~16% of voxels *per ore* — across three ores
+    // that is a third of the rock, which reads as a solid wall of ore in the
+    // claim's exposed cross-section. These values target ~10% per band, which
+    // `world.test.ts` now pins.
     ores: [
-      { kind: "coal", weight: 46, freq: 0.085, threshold: 0.56 },
-      { kind: "iron", weight: 34, freq: 0.1, threshold: 0.63 },
-      { kind: "copper", weight: 20, freq: 0.105, threshold: 0.68 },
+      { kind: "coal", weight: 46, freq: 0.085, threshold: 0.845 },
+      { kind: "iron", weight: 34, freq: 0.1, threshold: 0.87 },
+      { kind: "copper", weight: 20, freq: 0.105, threshold: 0.885 },
     ],
     tint: "#5c6472",
   },
@@ -75,11 +81,11 @@ export const STRATA: readonly StratumBand[] = [
     baseBlock: "deepslate",
     hardness: 1.9,
     ores: [
-      { kind: "coal", weight: 14, freq: 0.09, threshold: 0.66 },
-      { kind: "iron", weight: 26, freq: 0.1, threshold: 0.6 },
-      { kind: "copper", weight: 22, freq: 0.105, threshold: 0.63 },
-      { kind: "silver", weight: 27, freq: 0.115, threshold: 0.7 },
-      { kind: "titanium", weight: 11, freq: 0.13, threshold: 0.79 },
+      { kind: "coal", weight: 14, freq: 0.09, threshold: 0.915 },
+      { kind: "iron", weight: 26, freq: 0.1, threshold: 0.885 },
+      { kind: "copper", weight: 22, freq: 0.105, threshold: 0.895 },
+      { kind: "silver", weight: 27, freq: 0.115, threshold: 0.9 },
+      { kind: "titanium", weight: 11, freq: 0.13, threshold: 0.93 },
     ],
     tint: "#333a49",
   },
@@ -90,10 +96,10 @@ export const STRATA: readonly StratumBand[] = [
     baseBlock: "basalt",
     hardness: 3.1,
     ores: [
-      { kind: "silver", weight: 12, freq: 0.115, threshold: 0.74 },
-      { kind: "titanium", weight: 32, freq: 0.12, threshold: 0.68 },
-      { kind: "crystal", weight: 39, freq: 0.14, threshold: 0.74 },
-      { kind: "voidstone", weight: 17, freq: 0.16, threshold: 0.845 },
+      { kind: "silver", weight: 12, freq: 0.115, threshold: 0.9 },
+      { kind: "titanium", weight: 32, freq: 0.12, threshold: 0.865 },
+      { kind: "crystal", weight: 39, freq: 0.14, threshold: 0.875 },
+      { kind: "voidstone", weight: 17, freq: 0.16, threshold: 0.935 },
     ],
     tint: "#241f2e",
   },

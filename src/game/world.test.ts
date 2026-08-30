@@ -86,6 +86,21 @@ describe("world generation", () => {
     expect(found).toContain(BLOCK.VOID_ORE);
   });
 
+  it("keeps ore a minority of the rock", () => {
+    // Both bounds matter. Too little and the claim is a boring grey box; too
+    // much and the exposed cross-section reads as solid ore, which both looks
+    // wrong and makes every resource feel worthless.
+    let ore = 0;
+    let solid = 0;
+    for (let i = 0; i < world.data.length; i++) {
+      if (IS_SOLID[world.data[i]]) solid++;
+      if (IS_ORE[world.data[i]]) ore++;
+    }
+    const fraction = ore / solid;
+    expect(fraction).toBeGreaterThan(0.02);
+    expect(fraction).toBeLessThan(0.2);
+  });
+
   it("keeps the rarest ore genuinely rare", () => {
     let void_ = 0;
     let coal = 0;

@@ -150,8 +150,11 @@ export class Engine {
     // Frame the claim from a low angle so the first thing seen is the
     // strata cross-section at the boundary, not a top-down grid.
     const surface = this.world.surfaceAt(Math.floor(W / 2), Math.floor(W / 2));
-    this.camera.focusOn(W / 2, surface + 4, W / 2, 88);
-    this.camera.setPose(Math.PI * 0.22, Math.PI * 0.3, 118);
+    this.camera.focusOn(W / 2, surface - 4, W / 2, 82);
+    // A low, oblique angle. From overhead the claim is a green rectangle; from
+    // down here the first thing visible is the strata cut at the boundary,
+    // which is the whole premise of the game.
+    this.camera.setPose(Math.PI * 0.22, Math.PI * 0.38, 104);
 
     await this.#meshAll((progress) => {
       callbacks.onLoadProgress?.(0.7 + progress * 0.3, "Building geometry");

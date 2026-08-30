@@ -12,7 +12,8 @@ import {
   Roadmap,
 } from "@/ui/site/sections";
 
-const REPO_URL = process.env.NEXT_PUBLIC_REPO_URL;
+const REPO_URL =
+  process.env.NEXT_PUBLIC_REPO_URL ?? "https://github.com/fynntechnology-ux/strata";
 
 export default function LandingPage() {
   return (
