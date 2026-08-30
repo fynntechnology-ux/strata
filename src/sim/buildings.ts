@@ -55,7 +55,11 @@ export const BUILDING_DEFS: Record<BuildingKind, BuildingDef> = {
     costScale: 1.9,
     outputScale: 1.55,
     baseCostTokens: 400,
-    baseCostResources: { ironIngot: 4 },
+    // Raw ore, not ingots. Everything unlocked at level 1 has to be buildable
+    // from what a bare hands-and-a-pick player can actually get — a starter
+    // building priced in refined goods is a deadlock, because refining needs
+    // a Smelter and the Smelter is itself a starter building.
+    baseCostResources: { iron: 22 },
     unlockLevel: 1,
     maxCount: null,
     accent: "#ff9a2e",
@@ -75,7 +79,7 @@ export const BUILDING_DEFS: Record<BuildingKind, BuildingDef> = {
     costScale: 1.85,
     outputScale: 1.5,
     baseCostTokens: 650,
-    baseCostResources: { ironIngot: 6, copperIngot: 2 },
+    baseCostResources: { iron: 26, copper: 12 },
     unlockLevel: 2,
     maxCount: null,
     accent: "#ff6b35",
@@ -95,7 +99,7 @@ export const BUILDING_DEFS: Record<BuildingKind, BuildingDef> = {
     costScale: 1.8,
     outputScale: 1.6,
     baseCostTokens: 500,
-    baseCostResources: { copperIngot: 5 },
+    baseCostResources: { copper: 20 },
     unlockLevel: 1,
     maxCount: null,
     accent: "#fbbf24",
@@ -115,7 +119,7 @@ export const BUILDING_DEFS: Record<BuildingKind, BuildingDef> = {
     costScale: 1.75,
     outputScale: 1.8,
     baseCostTokens: 220,
-    baseCostResources: { ironIngot: 3 },
+    baseCostResources: { iron: 12 },
     unlockLevel: 1,
     maxCount: null,
     accent: "#36d6ec",
@@ -134,7 +138,7 @@ export const BUILDING_DEFS: Record<BuildingKind, BuildingDef> = {
     costScale: 1.7,
     outputScale: 1,
     baseCostTokens: 300,
-    baseCostResources: { ironIngot: 4 },
+    baseCostResources: { iron: 18 },
     unlockLevel: 1,
     maxCount: null,
     accent: "#4ade80",

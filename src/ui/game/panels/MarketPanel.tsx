@@ -185,6 +185,7 @@ function Browse() {
               <ItemCard
                 key={listing.id}
                 item={listing.item}
+                hideListedBadge
                 footer={
                   <div>
                     <div className="flex items-baseline justify-between gap-2">
@@ -322,6 +323,7 @@ function MyListings() {
           <ItemCard
             key={listing.id}
             item={listing.item}
+            hideListedBadge
             footer={
               <div className="flex items-center gap-2">
                 <span className="tnum flex-1 text-[14px] font-semibold text-amber">

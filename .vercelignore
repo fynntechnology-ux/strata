@@ -1,0 +1,15 @@
+# Nothing here is needed to build the web app. Excluding it keeps the upload
+# small and the build fast.
+
+programs/
+target/
+docs/
+.anchor/
+Anchor.toml
+Cargo.toml
+Cargo.lock
+
+# Local tooling
+.claude/
+*.test.ts
+vitest.config.mts

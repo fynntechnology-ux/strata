@@ -14,8 +14,9 @@ import {
   simulateProduction,
   xpToNext,
 } from "./economy";
-import { RARITIES, type Rarity } from "./types";
+import { RARITIES, type Rarity, type ResourceKind } from "./types";
 import { salvageValue } from "./items";
+import { BUILDING_DEFS, BUILDING_LIST, buildingCost } from "./buildings";
 
 const seed = (text: string) => sha256(new TextEncoder().encode(text));
 
@@ -316,6 +317,62 @@ describe("marketplace fees", () => {
       const split = marketFeeSplit(price, 250, 4_000);
       expect(split.toSeller).toBeLessThanOrEqual(price);
       expect(split.toSeller + split.fee).toBe(price);
+    }
+  });
+});
+
+/* ==========================================================================
+   Progression reachability
+
+   These exist because a purely numeric balance pass will not catch a
+   *deadlock*. Every early building originally cost refined ingots, which come
+   only from a Smelter, which itself cost ingots — so a fresh claim could
+   build nothing at all, forever, and every individual number looked fine.
+   ========================================================================== */
+
+describe("progression bootstrap", () => {
+  it("never gates an early building behind refined resources", () => {
+    const smelterUnlock = BUILDING_DEFS.smelter.unlockLevel;
+
+    for (const def of BUILDING_LIST) {
+      // Anything unlocking after the Smelter may reasonably want ingots.
+      if (def.unlockLevel > smelterUnlock) continue;
+
+      const cost = buildingCost(def.kind, 1);
+      for (const kind of Object.keys(cost.resources) as ResourceKind[]) {
+        expect(
+          RESOURCE_DEFS[kind].refined,
+          `${def.name} costs refined ${kind}, but a Smelter is the only source ` +
+            `of refined goods and does not unlock until level ${smelterUnlock}`
+        ).toBe(false);
+      }
+    }
+  });
+
+  it("keeps at least one level-1 building within reach of a fresh claim", () => {
+    // Matches the starting kit handed out by `initPlayer`.
+    const STARTING_TOKENS = 2_500;
+    const AFFORDABLE_ORE = 40; // roughly a first session of hand mining
+
+    const reachable = BUILDING_LIST.filter((def) => def.unlockLevel === 1)
+      .map((def) => buildingCost(def.kind, 1))
+      .filter(
+        (cost) => cost.tokens <= STARTING_TOKENS && bagTotal(cost.resources) <= AFFORDABLE_ORE
+      );
+
+    expect(
+      reachable.length,
+      "a new player must be able to build something without passive income"
+    ).toBeGreaterThan(0);
+  });
+
+  it("still requires refined goods for the late-game buildings", () => {
+    // The other half of the invariant: if nothing needs ingots, the Smelter
+    // has no purpose and the refining loop is decorative.
+    for (const kind of ["market", "lab"] as const) {
+      const cost = buildingCost(kind, 1);
+      const kinds = Object.keys(cost.resources) as ResourceKind[];
+      expect(kinds.some((k) => RESOURCE_DEFS[k].refined)).toBe(true);
     }
   });
 });

@@ -20,12 +20,15 @@ export function ItemCard({
   onClick,
   selected = false,
   compactLayout = false,
+  /** Suppresses the "Listed" badge where every card is listed by definition. */
+  hideListedBadge = false,
   footer,
 }: {
   item: ItemInstance;
   onClick?: () => void;
   selected?: boolean;
   compactLayout?: boolean;
+  hideListedBadge?: boolean;
   footer?: React.ReactNode;
 }) {
   const archetype = ARCHETYPE_BY_KEY.get(item.archetype);
@@ -80,7 +83,7 @@ export function ItemCard({
                 Worn
               </span>
             )}
-            {item.listed && (
+            {item.listed && !hideListedBadge && (
               <span className="shrink-0 border border-violet/45 bg-violet/12 px-1.5 text-[9px] uppercase tracking-[0.1em] text-violet">
                 Listed
               </span>
